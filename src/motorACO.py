@@ -1,6 +1,5 @@
 from ambiente import Ambiente
 from formiga import Formiga
-import copy
 
 class MotorACO:
     def __init__(self, ambiente: 'Ambiente', num_formigas, alfa, beta, rho, q):
@@ -15,11 +14,10 @@ class MotorACO:
         self.melhor_distancia = float('inf')
 
     def executar(self, num_iteracoes: int):
+        colonia = [Formiga(0, self.ambiente.num_cidades) for _ in range(self.num_formigas)]
         for t in range(num_iteracoes):
-            colonia = []
-            
-            for _ in range(self.num_formigas):
-                formiga = Formiga(0, self.ambiente.num_cidades)
+            for formiga in colonia:
+                formiga.limpar(0)
                 formiga.construir_solucao(self.ambiente, self.alfa, self.beta)
                 colonia.append(formiga)
                 
@@ -30,7 +28,6 @@ class MotorACO:
             self.ambiente.aplicar_evaporacao(self.rho)
             self._atualizar_feromonios_global(colonia)
                 
-
     def _atualizar_feromonios_global(self, colonia):
         for formiga in colonia:
             delta_tau = self.q / formiga.distancia_percorrida
@@ -39,3 +36,17 @@ class MotorACO:
                 i = formiga.caminho[k]
                 j = formiga.caminho[k + 1]
                 self.ambiente.depositar_feromonio(i, j, delta_tau)
+
+matriz = Ambiente.carregar_instancia("../data/att48_d.txt")
+ambiente = Ambiente(matriz)
+motor = MotorACO(
+    ambiente=ambiente, 
+    num_formigas=1000, 
+    alfa=1.0, 
+    beta=5.0, 
+    rho=0.5, 
+    q=100.0
+)
+motor.executar(num_iteracoes=50)
+print(f"Melhor distância encontrada: {motor.melhor_distancia}")
+print(f"Melhor caminho: {motor.melhor_caminho}")
