@@ -19,7 +19,6 @@ class MotorACO:
             for formiga in colonia:
                 formiga.limpar(0)
                 formiga.construir_solucao(self.ambiente, self.alfa, self.beta)
-                colonia.append(formiga)
                 
                 if formiga.distancia_percorrida < self.melhor_distancia:
                     self.melhor_distancia = formiga.distancia_percorrida
@@ -37,11 +36,11 @@ class MotorACO:
                 j = formiga.caminho[k + 1]
                 self.ambiente.depositar_feromonio(i, j, delta_tau)
 
-matriz = Ambiente.carregar_instancia("../data/att48_d.txt")
+matriz = Ambiente.carregar_instancia("data/att48_d.txt")
 ambiente = Ambiente(matriz)
 motor = MotorACO(
     ambiente=ambiente, 
-    num_formigas=1000, 
+    num_formigas=100, 
     alfa=1.0, 
     beta=5.0, 
     rho=0.5, 
