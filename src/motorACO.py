@@ -35,17 +35,3 @@ class MotorACO:
                 i = formiga.caminho[k]
                 j = formiga.caminho[k + 1]
                 self.ambiente.depositar_feromonio(i, j, delta_tau)
-
-matriz = Ambiente.carregar_instancia("data/att48_d.txt")
-ambiente = Ambiente(matriz)
-motor = MotorACO(
-    ambiente=ambiente, 
-    num_formigas=100, 
-    alfa=1.0, 
-    beta=5.0, 
-    rho=0.5, 
-    q=100.0
-)
-motor.executar(num_iteracoes=50)
-print(f"Melhor distância encontrada: {motor.melhor_distancia}")
-print(f"Melhor caminho: {motor.melhor_caminho}")
